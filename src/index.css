@@ -190,3 +190,18 @@ html, body, #root {
   width: 18px;
   height: 18px;
 }
+
+/* --- Сообщения об ошибках --- */
+.chat-error {
+  position: absolute;
+  bottom: 76px;
+  left: 8px;
+  right: 8px;
+  z-index: 4;
+  padding: 8px 12px;
+  background: #fee;
+  color: #c00;
+  border: 1px solid #fbb;
+  border-radius: 8px;
+  font-size: 13px;
+}

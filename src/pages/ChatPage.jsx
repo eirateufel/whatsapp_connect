@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import ChatWindow from '../components/ChatWindow';
 import MessageInput from '../components/MessageInput';
+import { useAuth } from '../hooks/useAuth';
+import { sendMessage } from '../api/messages';
 
 export default function ChatPage() {
+  const { apiUrl, idInstance, token } = useAuth();
+
   const [recipientPhone, setRecipientPhone] = useState('');
   const [chatActive, setChatActive] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [error, setError] = useState(null);
 
   const handleCreateChat = (e) => {
     e.preventDefault();
@@ -13,11 +18,24 @@ export default function ChatPage() {
     setChatActive(true);
   };
 
-  const handleSend = (text) => {
-    setMessages((prev) => [
-      ...prev,
-      { id: Date.now(), text, sender: 'me' },
-    ]);
+  const handleSend = async (text) => {
+    const tempId = Date.now();
+
+    setMessages((prev) => [...prev, { id: tempId, text, sender: 'me' }]);
+    setError(null);
+
+    try {
+      await sendMessage({
+        apiUrl,
+        idInstance,
+        token,
+        recipientPhone,
+        text,
+      });
+    } catch (err) {
+      setError('Не удалось отправить сообщение. Проверьте данные авторизации.');
+      console.error(err);
+    }
   };
 
   if (!chatActive) {
@@ -42,6 +60,7 @@ export default function ChatPage() {
     <div className="chat-page-active">
       <div className="chat-header">{recipientPhone}</div>
       <ChatWindow messages={messages} />
+      {error && <div className="chat-error">{error}</div>}
       <MessageInput onSend={handleSend} />
     </div>
   );
