@@ -1,24 +1,34 @@
-export async function greenApiRequest({ apiUrl, idInstance, token, method, body }) {
-  const baseUrl = apiUrl.replace(/\/$/, '');
-  const url = `${baseUrl}/waInstance${idInstance}/${method}/${token}`;
+const METHOD_VERBS = {
+  sendMessage: 'POST',
+  receiveNotification: 'GET',
+  deleteNotification: 'DELETE',
+};
 
-  console.log('[Green API] Request URL:', url);
-  console.log('[Green API] Request body:', body);
+export async function greenApiRequest({ apiUrl, idInstance, token, method, body, params }) {
+  const baseUrl = apiUrl.replace(/\/$/, '');
+  const httpVerb = METHOD_VERBS[method];
+
+  if (!httpVerb) {
+    throw new Error(`Unknown Green API method: ${method}`);
+  }
+
+  const pathSuffix = params ? `/${params}` : '';
+  const url = `${baseUrl}/waInstance${idInstance}/${method}/${token}${pathSuffix}`;
+  const hasBody = httpVerb === 'POST' && body !== undefined;
 
   const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined,
+    method: httpVerb,
+    headers: hasBody ? { 'Content-Type': 'application/json' } : undefined,
+    body: hasBody ? JSON.stringify(body) : undefined,
   });
 
-  console.log('[Green API] Response status:', response.status, response.statusText);
-
   const responseText = await response.text();
-  console.log('[Green API] Response body (raw):', responseText);
 
   if (!response.ok) {
     throw new Error(`Green API error ${response.status}: ${responseText}`);
   }
+
+  if (!responseText) return null;
 
   try {
     return JSON.parse(responseText);

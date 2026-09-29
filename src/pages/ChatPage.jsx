@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import ChatWindow from '../components/ChatWindow';
 import MessageInput from '../components/MessageInput';
 import { useAuth } from '../hooks/useAuth';
-import { sendMessage } from '../api/messages';
+import { sendMessage, formatChatId } from '../api/messages';
+import { useMessagePolling } from '../hooks/useMessagePolling';
 
 export default function ChatPage() {
   const { apiUrl, idInstance, token } = useAuth();
@@ -12,6 +13,11 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
 
+  const recipientChatId = useMemo(
+    () => (recipientPhone ? formatChatId(recipientPhone) : null),
+    [recipientPhone]
+  );
+
   const handleCreateChat = (e) => {
     e.preventDefault();
     if (!recipientPhone.trim()) return;
@@ -20,23 +26,29 @@ export default function ChatPage() {
 
   const handleSend = async (text) => {
     const tempId = Date.now();
-
     setMessages((prev) => [...prev, { id: tempId, text, sender: 'me' }]);
     setError(null);
 
     try {
-      await sendMessage({
-        apiUrl,
-        idInstance,
-        token,
-        recipientPhone,
-        text,
-      });
+      await sendMessage({ apiUrl, idInstance, token, recipientPhone, text });
     } catch (err) {
       setError('Не удалось отправить сообщение. Проверьте данные авторизации.');
       console.error(err);
     }
   };
+
+  const handleIncoming = useCallback((msg) => {
+    setMessages((prev) => [...prev, msg]);
+  }, []);
+
+  useMessagePolling({
+    apiUrl,
+    idInstance,
+    token,
+    recipientChatId,
+    enabled: chatActive,
+    onMessage: handleIncoming,
+  });
 
   if (!chatActive) {
     return (

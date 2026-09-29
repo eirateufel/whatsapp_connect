@@ -8,19 +8,30 @@ export function formatChatId(phone) {
 export async function sendMessage({ apiUrl, idInstance, token, recipientPhone, text }) {
   const chatId = formatChatId(recipientPhone);
 
-  console.log('[sendMessage] apiUrl:', apiUrl);
-  console.log('[sendMessage] idInstance:', idInstance);
-  console.log('[sendMessage] chatId:', chatId);
-  console.log('[sendMessage] text:', text);
-
   return greenApiRequest({
     apiUrl,
     idInstance,
     token,
     method: 'sendMessage',
-    body: {
-      chatId,
-      message: text,
-    },
+    body: { chatId, message: text },
+  });
+}
+
+export async function getNotification({ apiUrl, idInstance, token }) {
+  return greenApiRequest({
+    apiUrl,
+    idInstance,
+    token,
+    method: 'receiveNotification',
+  });
+}
+
+export async function deleteNotification({ apiUrl, idInstance, token, receiptId }) {
+  return greenApiRequest({
+    apiUrl,
+    idInstance,
+    token,
+    method: 'deleteNotification',
+    params: receiptId,
   });
 }

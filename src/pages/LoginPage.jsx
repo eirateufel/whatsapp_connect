@@ -7,7 +7,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = (credentials) => {
-    login(credentials); // { phone, apiUrl, idInstance, token }
+    login(credentials);
     navigate('/chat');
   };
 
