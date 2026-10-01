@@ -1,8 +1,16 @@
 import { useRef, useState } from 'react';
 
-const MIN_ROWS = 2;
+const MIN_ROWS = 1;
 const MAX_ROWS = 8;
 const LINE_HEIGHT = 20; // px, должен совпадать со стилями в CSS
+const VERTICAL_PADDING = 20; // px, должен совпадать со стилями в CSS
+
+function getCSSNumber(varName) {
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(varName)
+    .trim();
+  return parseFloat(value); // 20px → 20, 1 → 1
+}
 
 export default function MessageInput({ onSend }) {
   const [text, setText] = useState('');
@@ -11,7 +19,7 @@ export default function MessageInput({ onSend }) {
   const resize = (el) => {
     el.style.height = 'auto';
     const maxHeight = LINE_HEIGHT * MAX_ROWS;
-    const newHeight = Math.min(el.scrollHeight, maxHeight);
+    const newHeight = Math.min(el.scrollHeight, maxHeight) - VERTICAL_PADDING;
     el.style.height = `${newHeight}px`;
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
   };
