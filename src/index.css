@@ -284,6 +284,7 @@ html, body, #root {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px 0px;
   margin: 0 8px 8px 8px;
   box-sizing: border-box;
+  width: calc(100% - 16px);
 }
 
 .message-input {
