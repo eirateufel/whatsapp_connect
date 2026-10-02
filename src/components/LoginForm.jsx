@@ -1,30 +1,17 @@
 import { useState } from 'react';
 
 export default function LoginForm({ onSubmit }) {
-  const [phone, setPhone] = useState('');
   const [apiUrl, setApiUrl] = useState('');
   const [idInstance, setIdInstance] = useState('');
   const [token, setToken] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ phone, apiUrl, idInstance, token });
+    onSubmit({ apiUrl, idInstance, token });
   };
 
   return (
     <form className="login-form" onSubmit={handleSubmit}>
-      <div className="form-field">
-        <label htmlFor="phone">Номер телефона</label>
-        <input
-          id="phone"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="+7 900 000-00-00"
-          required
-        />
-      </div>
-
       <div className="form-field">
         <label htmlFor="apiUrl">API URL</label>
         <input
