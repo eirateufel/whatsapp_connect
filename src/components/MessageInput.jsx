@@ -59,7 +59,7 @@ export default function MessageInput({ onSend }) {
         placeholder="Введите сообщение..."
       />
       <button className="send-button" onClick={handleSend} aria-label="Отправить">
-        <img src="/send-icon.svg" alt="" />
+        <img src={`${import.meta.env.BASE_URL}send-icon.svg`} alt="" />
       </button>
     </div>
   );
