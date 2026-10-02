@@ -19,7 +19,7 @@ export function useMessagePolling({ apiUrl, idInstance, token, recipientChatId, 
         if (notification) {
           const { receiptId, body } = notification;
           console.log('[poll] notification:', notification);
-
+          
           const messageData = body?.messageData;
           const senderData = body?.senderData;
           const senderChatId = senderData?.sender || senderData?.chatId;
@@ -33,12 +33,13 @@ export function useMessagePolling({ apiUrl, idInstance, token, recipientChatId, 
             const isFromCurrentChat = senderChatId === recipientChatId;
 
             if (text && isFromCurrentChat) {
-              console.log('[poll] new message for current chat:', text); 
+              console.log('[poll] new message for current chat:', text);
               onMessage({
                 id: body.idMessage,
                 text,
                 sender: 'them',
                 from: senderChatId,
+                timestamp: body.timestamp ? body.timestamp * 1000 : Date.now(),
               });
             }
           }

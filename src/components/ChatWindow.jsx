@@ -9,13 +9,17 @@ export default function ChatWindow({ messages }) {
     if (!el) return;
 
     el.scrollTop = el.scrollHeight;
-
   }, [messages]);
 
   return (
     <div ref={chatWindowRef} className="chat-window">
       {messages.map((msg) => (
-        <MessageBubble key={msg.id} text={msg.text} sender={msg.sender} />
+        <MessageBubble
+          key={msg.id}
+          text={msg.text}
+          sender={msg.sender}
+          timestamp={msg.timestamp}
+        />
       ))}
     </div>
   );

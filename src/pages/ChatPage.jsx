@@ -24,9 +24,12 @@ export default function ChatPage() {
     setChatActive(true);
   };
 
-  const handleSend = async (text) => {
-    const tempId = Date.now();
-    setMessages((prev) => [...prev, { id: tempId, text, sender: 'me' }]);
+ const handleSend = async (text) => {
+    const tempId = crypto.randomUUID();
+    setMessages((prev) => [
+      ...prev,
+      { id: tempId, text, sender: 'me', timestamp: Date.now() },
+    ]);
     setError(null);
 
     try {
