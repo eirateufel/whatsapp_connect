@@ -4,6 +4,8 @@
 
 Дизайн интерфейса основан на веб-версии WhatsApp.
 
+Сайт опубликован по ссылке: https://eirateufel.github.io/whatsapp_connect/
+
 ## Стек технологий
 
 - **React** (Vite)
