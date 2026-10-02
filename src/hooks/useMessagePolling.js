@@ -13,13 +13,10 @@ export function useMessagePolling({ apiUrl, idInstance, token, recipientChatId, 
 
     const poll = async () => {
       try {
-        console.log('[poll] checking for new messages...');
         const notification = await getNotification({ apiUrl, idInstance, token });
 
         if (notification) {
           const { receiptId, body } = notification;
-          console.log('[poll] notification:', notification);
-          
           const messageData = body?.messageData;
           const senderData = body?.senderData;
           const senderChatId = senderData?.sender || senderData?.chatId;
@@ -33,7 +30,6 @@ export function useMessagePolling({ apiUrl, idInstance, token, recipientChatId, 
             const isFromCurrentChat = senderChatId === recipientChatId;
 
             if (text && isFromCurrentChat) {
-              console.log('[poll] new message for current chat:', text);
               onMessage({
                 id: body.idMessage,
                 text,
